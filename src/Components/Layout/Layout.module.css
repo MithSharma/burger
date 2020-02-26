@@ -1,0 +1,12 @@
+.toolbar{
+    box-sizing: border-box;
+    width:100%;
+    color: black;
+    display: flex;
+    flex-direction: row;
+    background-color: whitesmoke;
+    border: 1px solid balck;
+    padding:20px;
+    justify-content: space-between;
+    margin:auto;
+}

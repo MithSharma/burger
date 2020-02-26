@@ -1,0 +1,10 @@
+.Container{
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    height: 450px;
+    overflow-y: scroll;
+}
