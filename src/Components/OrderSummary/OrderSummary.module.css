@@ -1,0 +1,15 @@
+.ModalFooter{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    padding: .75rem;
+    border-top: 1px solid #dee2e6;
+    border-bottom-right-radius: calc(.3rem - 1px);
+    border-bottom-left-radius: calc(.3rem - 1px);
+}
+
+
+.ModalFooter>:not(:last-child) {
+    margin-right: .9rem;
+}

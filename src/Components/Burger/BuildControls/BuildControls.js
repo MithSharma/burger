@@ -25,7 +25,7 @@ const buildControls = ( props ) =>{
         <div className={classes.BuildControls}>
         <p className={classes.Bold}>Total price:{props.totalPrice.toFixed(2)}</p>
             {buildControlsJSX}
-        <button className={classes.OrderButton} disabled={!props.disabled}>Order Now</button>
+        <button className={classes.OrderButton} disabled={!props.disabled} onClick={props.setModalShow}>Order Now</button>
         </div>
     )
 }

@@ -1,8 +1,8 @@
 import React ,{ Component } from 'react';
 import Burger from '../../Components/Burger/Burger'
 import BuildControls from '../../Components/Burger/BuildControls/BuildControls';
-import { object } from 'prop-types';
-
+import Modal from '../../Components/UI/Modal/Modal';
+import OrderSummary from '../../Components/OrderSummary/OrderSummary'
 const INGREDIENT_PRICES ={
     salad:.5,
     meat:1.3,
@@ -20,7 +20,13 @@ class BurgerBuilder extends Component{
             "bacon":0
         },
         totalprice:4,
-        purchaseable:false
+        purchaseable:false,
+        purchasing:false
+    }
+
+    setModalShow = (bool) => {
+        this.setState({purchasing:bool})
+        console.log(this.state.purchasing);
     }
 
     addIngredientHandler=(type)=>{
@@ -66,16 +72,22 @@ class BurgerBuilder extends Component{
         for(let key in disabledInfo){
             disabledInfo[key] = (disabledInfo[key] <= 0);
         }
-        console.log(disabledInfo)
         return(
             <div>
+                <Modal show={this.state.purchasing}  > 
+                    <OrderSummary 
+                    price={this.state.totalprice}
+                    onHide={() => this.setModalShow(false)}
+                    ingredients={this.state.ingredients} />
+                </Modal>
                 <Burger  ingredients= {this.state.ingredients}/>
                 <BuildControls 
                 added= {this.addIngredientHandler} 
                 removed= {this.removeIngredientHandler}
                 totalPrice={this.state.totalprice}
                 disabled={this.state.purchaseable}
-                removeDisabled={disabledInfo}/>
+                removeDisabled={disabledInfo}
+                setModalShow = {() => this.setModalShow(true)}/>
             </div>
         )
     }
