@@ -4,9 +4,10 @@
     color: black;
     display: flex;
     flex-direction: row;
-    background-color: whitesmoke;
+    background-color:#703B09;
     border: 1px solid balck;
     padding:20px;
     justify-content: space-between;
     margin:auto;
+    color: white;
 }

@@ -4,12 +4,10 @@ import classes from './Modal.module.css'
 
 const modal = ( props ) => {
         return(
-            <Modal
-              {...props}
+            <Modal {...props}
               size="lg"
               aria-labelledby="contained-modal-title-vcenter"
-              centered
-            >
+              centered>
               <Modal.Body>
                 <p>
                   {props.children}

@@ -7,7 +7,7 @@ const layout = (props) =>{
     return(
         <Aux>
             <div className={classes.toolbar}>
-            <div>toolbar</div><div>orders</div><div>backdrop</div>
+            <div>TOOLBAR</div><div>LOGO</div><div>BACKDROP</div>
             </div>
             <BurgerBuilder />
         </Aux>

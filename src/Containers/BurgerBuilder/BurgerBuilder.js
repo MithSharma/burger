@@ -2,7 +2,11 @@ import React ,{ Component } from 'react';
 import Burger from '../../Components/Burger/Burger'
 import BuildControls from '../../Components/Burger/BuildControls/BuildControls';
 import Modal from '../../Components/UI/Modal/Modal';
-import OrderSummary from '../../Components/OrderSummary/OrderSummary'
+import OrderSummary from '../../Components/OrderSummary/OrderSummary';
+import axios from 'axios';
+import Aux from '../../hoc/Aux';
+import Spinner from '../../Components/UI/Spinner/Spinner';
+
 const INGREDIENT_PRICES ={
     salad:.5,
     meat:1.3,
@@ -13,15 +17,18 @@ const INGREDIENT_PRICES ={
 class BurgerBuilder extends Component{
 
     state ={
-        ingredients :{
-            "meat":0,
-            "salad":0,
-            "cheese":0,
-            "bacon":0
-        },
+        ingredients:null,
         totalprice:4,
         purchaseable:false,
         purchasing:false
+    }
+
+    componentDidMount(){
+        axios.get("https://react-my-burger-e0383.firebaseio.com/ingredients.json")
+        .then(response =>{
+            this.setState({ingredients:response.data})
+        })
+        .catch(error => console.log(error.message))
     }
 
     setModalShow = (bool) => {
@@ -65,6 +72,26 @@ class BurgerBuilder extends Component{
         return this.state.ingredients[type]>0
     }
 
+    postDataHandler = () => {
+        let post = {
+            ingredients: this.state.ingredients,
+            customer:{
+                name:"mithelesh sharma",
+                address:{
+                    street:"kudlu date",
+                    city:"bangalore"
+                }
+            },
+            price:this.state.totalprice,
+            delivery:"fastest"
+        }
+        axios.post("https://react-my-burger-e0383.firebaseio.com/orders.json",post)
+        .then(response =>{
+            console.log(response)
+        })
+        .catch(error => console.log(error))
+    }
+
     render(){
         const disabledInfo = {
             ...this.state.ingredients
@@ -72,22 +99,31 @@ class BurgerBuilder extends Component{
         for(let key in disabledInfo){
             disabledInfo[key] = (disabledInfo[key] <= 0);
         }
+        let burger = <Spinner/>;
+        if(this.state.ingredients){
+             burger = (
+                 <Aux>
+                    <Burger  ingredients= {this.state.ingredients}/>
+                    <BuildControls 
+                    added= {this.addIngredientHandler} 
+                    removed= {this.removeIngredientHandler}
+                    totalPrice={this.state.totalprice}
+                    disabled={this.state.purchaseable}
+                    removeDisabled={disabledInfo}
+                    setModalShow = {() => this.setModalShow(true)}/>
+                </Aux>
+                );
+        }
         return(
             <div>
                 <Modal show={this.state.purchasing}  > 
                     <OrderSummary 
                     price={this.state.totalprice}
                     onHide={() => this.setModalShow(false)}
+                    onSave={this.postDataHandler}
                     ingredients={this.state.ingredients} />
                 </Modal>
-                <Burger  ingredients= {this.state.ingredients}/>
-                <BuildControls 
-                added= {this.addIngredientHandler} 
-                removed= {this.removeIngredientHandler}
-                totalPrice={this.state.totalprice}
-                disabled={this.state.purchaseable}
-                removeDisabled={disabledInfo}
-                setModalShow = {() => this.setModalShow(true)}/>
+                {burger}
             </div>
         )
     }

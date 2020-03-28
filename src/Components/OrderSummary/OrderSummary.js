@@ -20,7 +20,7 @@ const orderSummary = ( props ) => {
             <p>Continue to Checkout?</p>
             <div className={classes.ModalFooter}>
                 <Button onClick={props.onHide} variant="danger">Close</Button>
-                <Button onClick={props.onHide} variant="success">Continue</Button>
+                <Button onClick={props.onSave} variant="success">Continue</Button>
             </div>
         </Aux>
     );
