@@ -9,9 +9,9 @@ const modal = ( props ) => {
               aria-labelledby="contained-modal-title-vcenter"
               centered>
               <Modal.Body>
-                <p>
+                <div>
                   {props.children}
-                </p>
+                </div>
               </Modal.Body>
               {/* <Modal.Footer className={classes.ModalFooter}>
               <Button onClick={props.onHide} variant="danger">Close</Button>
@@ -21,4 +21,4 @@ const modal = ( props ) => {
         )
 }
 
-export default modal;
+export default modal;   

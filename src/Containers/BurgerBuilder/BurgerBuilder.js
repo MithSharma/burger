@@ -3,9 +3,10 @@ import Burger from '../../Components/Burger/Burger'
 import BuildControls from '../../Components/Burger/BuildControls/BuildControls';
 import Modal from '../../Components/UI/Modal/Modal';
 import OrderSummary from '../../Components/OrderSummary/OrderSummary';
-import axios from 'axios';
+import axios from '../../axios-order';
 import Aux from '../../hoc/Aux';
 import Spinner from '../../Components/UI/Spinner/Spinner';
+import WithErrorHandler from '../../hoc/withErrorHandler';
 
 const INGREDIENT_PRICES ={
     salad:.5,
@@ -20,11 +21,12 @@ class BurgerBuilder extends Component{
         ingredients:null,
         totalprice:4,
         purchaseable:false,
-        purchasing:false
+        purchasing:false,
+        loading:false
     }
 
     componentDidMount(){
-        axios.get("https://react-my-burger-e0383.firebaseio.com/ingredients.json")
+        axios.get("/ingredients.json")
         .then(response =>{
             this.setState({ingredients:response.data})
         })
@@ -73,6 +75,7 @@ class BurgerBuilder extends Component{
     }
 
     postDataHandler = () => {
+        this.setState({loading:true});
         let post = {
             ingredients: this.state.ingredients,
             customer:{
@@ -85,11 +88,15 @@ class BurgerBuilder extends Component{
             price:this.state.totalprice,
             delivery:"fastest"
         }
-        axios.post("https://react-my-burger-e0383.firebaseio.com/orders.json",post)
+        axios.post("/orders",post)
         .then(response =>{
+            this.setState({loading:false,purchasing:false});
             console.log(response)
         })
-        .catch(error => console.log(error))
+        .catch(error => {
+            this.setState({loading:false,purchasing:false});
+            console.log(error)
+        })
     }
 
     render(){
@@ -100,6 +107,15 @@ class BurgerBuilder extends Component{
             disabledInfo[key] = (disabledInfo[key] <= 0);
         }
         let burger = <Spinner/>;
+        let orderSummary =  <OrderSummary 
+                price={this.state.totalprice}
+                onHide={() => this.setModalShow(false)}
+                onSave={this.postDataHandler}
+                ingredients={this.state.ingredients} />;
+        if(this.state.loading){
+            orderSummary =  <Spinner/>;
+        }
+
         if(this.state.ingredients){
              burger = (
                  <Aux>
@@ -117,11 +133,7 @@ class BurgerBuilder extends Component{
         return(
             <div>
                 <Modal show={this.state.purchasing}  > 
-                    <OrderSummary 
-                    price={this.state.totalprice}
-                    onHide={() => this.setModalShow(false)}
-                    onSave={this.postDataHandler}
-                    ingredients={this.state.ingredients} />
+                   {orderSummary}
                 </Modal>
                 {burger}
             </div>
@@ -129,4 +141,4 @@ class BurgerBuilder extends Component{
     }
 }
 
-export default BurgerBuilder;
+export default WithErrorHandler(BurgerBuilder,axios);
