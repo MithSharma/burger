@@ -9,20 +9,27 @@ const withErrorHandler = (WrappedComponent,axios) =>{
                 error:null
             }
             componentDidMount () {
-                axios.interceptors.request.use(request =>{
+                this.reqInter = axios.interceptors.request.use(request =>{
                     this.setState({error:null});
+                    return request;
                 })
-                axios.interceptors.response.use(null,error =>{
+                this.resInter = axios.interceptors.response.use(null,error =>{
                     this.setState({error:error});
                 })
             }
-            hideModal = () =>{
-                this.setState({error:null});
+            componentWillUnmount (){
+                axios.interceptors.request.eject(this.reqInter)
+                axios.interceptors.request.eject(this.resInter)
             }
+
+            hideModal =()=>{
+                this.setState({error:false});
+            }
+           
             render(){
                 return(
-                    <Aux onClick={this.hidemodal}>
-                        <Modal show={this.state.error}>
+                    <Aux >
+                        <Modal show={this.state.error ? true : false} onHide={this.hideModal}>
                             {this.state.error ? this.state.error.message : null}
                         </Modal>
                         <WrappedComponent  {...this.props} />

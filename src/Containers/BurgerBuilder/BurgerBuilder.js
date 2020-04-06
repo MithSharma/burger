@@ -88,7 +88,7 @@ class BurgerBuilder extends Component{
             price:this.state.totalprice,
             delivery:"fastest"
         }
-        axios.post("/orders",post)
+        axios.post("/orders.json",post)
         .then(response =>{
             this.setState({loading:false,purchasing:false});
             console.log(response)
@@ -132,7 +132,7 @@ class BurgerBuilder extends Component{
         }
         return(
             <div>
-                <Modal show={this.state.purchasing}  > 
+                <Modal show={this.state.purchasing}  onHide={() => this.setModalShow(false)}> 
                    {orderSummary}
                 </Modal>
                 {burger}
